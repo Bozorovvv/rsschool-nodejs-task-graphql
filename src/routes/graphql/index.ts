@@ -155,17 +155,6 @@ const UserType = new GraphQLObjectType({
         });
       },
     },
-
-    deleteUser: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
-      resolve: (id, { prisma }) => {
-        return prisma.user.delete({
-          where: {
-            id,
-          },
-        });
-      },
-    },
   }),
 });
 
