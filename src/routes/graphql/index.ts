@@ -13,9 +13,12 @@ import {
   GraphQLBoolean,
   GraphQLInputObjectType,
   GraphQLEnumType,
+  validate,
+  parse,
 } from 'graphql';
 import { MemberTypeId } from '../member-types/schemas.js';
 import { UUIDType } from './types/uuid.js';
+import depthLimit from 'graphql-depth-limit';
 
 const MemberTypeEnum = new GraphQLEnumType({
   name: 'MemberTypeId',
@@ -345,6 +348,13 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
       },
     },
     async handler(req) {
+      const documentAST = parse(req.body.query);
+      const validationErrors = validate(schema, documentAST, [depthLimit(5)]);
+
+      if (validationErrors.length > 0) {
+        return { errors: validationErrors };
+      }
+
       const result = await graphql({
         schema,
         source: req.body.query,
