@@ -177,7 +177,7 @@ const RootQuery = new GraphQLObjectType({
       resolve: (_, __, { prisma }) => prisma.user.findMany(),
     },
     user: {
-      type: new GraphQLNonNull(UserType),
+      type: UserType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
@@ -212,7 +212,7 @@ const Mutations = new GraphQLObjectType({
   name: 'Mutations',
   fields: {
     createUser: {
-      type: new GraphQLNonNull(UserType),
+      type: UserType,
       args: {
         dto: { type: new GraphQLNonNull(CreateUserInput) },
       },
